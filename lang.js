@@ -56,6 +56,10 @@ function read(tokens) {
 	} else {
 		if (rgx.number.test(t)) {
 			return parseInt(t)
+		} else if (t == "true") {
+			return true
+		} else if (t == "false") {
+			return false
 		} else if (rgx.symbol.test(t) || keywords.indexOf(t) >= 0) {
 			return new Symbol(t)
 		} else {
