@@ -1,1 +1,1 @@
-(print true false)
+(print (if false 1 2))

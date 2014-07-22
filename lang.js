@@ -11,6 +11,7 @@ var keywords = [
 	"do",
 	"fn",
 	"let",
+	"if",
 	"+",
 	"-",
 	"*",
@@ -142,6 +143,17 @@ function exec(tree, env) {
 				scope[k.name] = v
 			}
 			exec(tree[2], scope)
+		} else if (first.equals(symbols["if"])) {
+			//(if cond (iftrue) ?(if false))
+			if (tree.length != 3 && tree.length != 4)
+				throw new Error("invalid arg count to if")
+			var cond = exec(tree[1], env)
+			if (cond) {
+				return exec(tree[2], env)
+			} else if (tree.length == 4) {
+				return exec(tree[3], env)
+			}
+			return null
 		} else {
 			var proc = env[first.name]
 			if (proc === undefined)
