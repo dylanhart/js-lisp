@@ -1,6 +1,6 @@
 var rgx = {
-	symbol: /[\w_+-]+/,
-	number: /-?\d+/,
+	symbol: /^[\w_+-]+$/,
+	number: /^-?\d+$/,
 	whitespace: /[\s,]+/,
 	block: /\((.+)\)/
 }
