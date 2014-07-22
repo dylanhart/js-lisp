@@ -95,7 +95,7 @@ function exec(tree, env) {
 				if (!(k instanceof Symbol))
 					throw new Error("def name must be a symbol")
 				env[k.name] = v
-			};
+			}
 			return null
 		} else if (first.equals(symbols["print"])) {
 			var elems = tree.slice(1)
