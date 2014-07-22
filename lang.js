@@ -12,6 +12,8 @@ var keywords = [
 	"fn",
 	"let",
 	"if",
+	"or",
+	"and",
 	"+",
 	"-",
 	"*",
@@ -164,6 +166,23 @@ function exec(tree, env) {
 				return exec(tree[3], env)
 			}
 			return null
+		} else if (first.equals(symbols["or"])) {
+			if (tree.length < 3)
+				throw new Error("invalid arg count")
+			for (var i = 1; i < tree.length; i++) {
+				var arg = exec(tree[i], env)
+				if (arg)
+					return arg
+			}
+			return false
+		} else if (first.equals(symbols["and"])) {
+			if (tree.length < 3)
+				throw new Error("invalid arg count")
+			for (var i = 1; i < tree.length; i++) {
+				if (!exec(tree[i], env))
+					return false
+			}
+			return true
 		} else {
 			var proc = env[first.name]
 			if (proc === undefined)
