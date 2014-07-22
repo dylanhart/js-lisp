@@ -85,6 +85,8 @@ function exec(tree, env) {
 			}
 			return ret
 		} else if (first.equals(symbols["def"])) {
+			if (tree.length % 2 != 1)
+				throw new Error("invalid arg count for def")
 			for (var i = 1; i < tree.length; i+=2) {
 				var k = tree[i]
 				var v = exec(tree[i+1], env)
