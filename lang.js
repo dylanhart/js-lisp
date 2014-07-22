@@ -10,6 +10,7 @@ var keywords = [
 	"print",
 	"do",
 	"fn",
+	"let",
 	"+",
 	"-",
 	"*",
@@ -120,6 +121,23 @@ function exec(tree, env) {
 		} else if (first.equals(symbols["fn"])) {
 			//(fn (arg1 arg2 ...) (code ...))
 			return new Proc(tree[2], tree[1].map(function(s) {return s.name}))
+		} else if (first.equals(symbols["let"])) {
+			//(let (k v k v ...) (code))
+			var assigns = tree[1]
+			if (assigns.length % 2 != 0)
+				throw new Error("invalid assignment in let")
+
+			var scope = {}
+			scope.prototype = env
+			for (var i = 0; i < assigns.length; i+=2) {
+				var k = assigns[i]
+				var v = exec(assigns[i+1], env)
+				// console.log("k: " + k + " v: " + v)
+				if (!(k instanceof Symbol))
+					throw new Error("def name must be a symbol")
+				scope[k.name] = v
+			}
+			exec(tree[2], scope)
 		} else {
 			var proc = env[first.name]
 			if (proc === undefined)
