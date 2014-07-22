@@ -76,6 +76,7 @@ function read(tokens) {
 }
 
 function parse(src) {
+	src = "(do " + src + ")"
 	src = src.replace(/\n/, " ").replace(/([\(\)])/g, " $& ").replace(/\n/, " ")
 	var tokens = src.split(rgx.whitespace).filter(function(t) {return t != ''})
 	var tree = read(tokens)	
