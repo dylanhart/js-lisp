@@ -14,10 +14,13 @@ var keywords = [
 	"if",
 	"or",
 	"and",
+	"not",
 	"+",
 	"-",
 	"*",
-	"/"
+	"/",
+	"<",
+	">"
 ]
 
 var symbols = {}
@@ -183,6 +186,19 @@ function exec(tree, env) {
 					return false
 			}
 			return true
+		} else if (first.equals(symbols["not"])) {
+			if (tree.length != 2)
+				throw new Error("invalid arg count")
+			return !exec(tree[1], env)
+		} else if (first.equals(symbols["<"])) {
+			if (tree.length != 3)
+				throw new Error("invalid arg count")
+			return exec(tree[1], env) < exec(tree[2], env)
+		} else if (first.equals(symbols[">"])) {
+			if (tree.length != 3)
+				throw new Error("invalid arg count")
+			return exec(tree[1], env) > exec(tree[2], env)
+
 		} else {
 			var proc = env[first.name]
 			if (proc === undefined)
