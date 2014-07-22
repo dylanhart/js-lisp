@@ -215,7 +215,10 @@ function exec(tree, env) {
 			return exec(proc.tree, scope)
 		}
 	} else if (tree instanceof Symbol) {
-		return env[tree.name]
+		var ret = env[tree.name]
+		if (ret === undefined)
+			throw new Error("value not found for symbol: " + tree.name)
+		return ret
 	} else {
 		return tree
 	}
