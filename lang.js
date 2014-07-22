@@ -142,7 +142,7 @@ function exec(tree, env) {
 					throw new Error("def name must be a symbol")
 				scope[k.name] = v
 			}
-			exec(tree[2], scope)
+			return exec(tree[2], scope)
 		} else if (first.equals(symbols["if"])) {
 			//(if cond (iftrue) ?(if false))
 			if (tree.length != 3 && tree.length != 4)
