@@ -1,3 +1,5 @@
+var fs = require("fs")
+
 var rgx = {
 	symbol: /^[\w_+-]+$/,
 	number: /^-?\d+$/,
@@ -228,6 +230,7 @@ function exec(tree, env) {
 }
 
 var stdlib = {}
+exec(parse(fs.readFileSync("./stdlib.l", {encoding:"utf-8"})), stdlib)
 
 function newGlobalScope() {
 	var gs = Object.create(stdlib)
