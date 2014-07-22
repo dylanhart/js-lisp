@@ -143,6 +143,13 @@ function exec(tree, env) {
 
 var stdlib = {}
 
+function newGlobalScope() {
+	var gs = {}
+	gs.prototype = stdlib
+	return gs
+}
+
 exports.parse = parse
 exports.exec = exec
 exports.stdlib = stdlib
+exports.newGlobalScope = newGlobalScope

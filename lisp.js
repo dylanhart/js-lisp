@@ -17,4 +17,4 @@ var tree = lang.parse(src)
 // console.log(tree)
 
 console.log("output:")
-lang.exec(tree, lang.stdlib)
+lang.exec(tree, lang.newGlobalScope())
