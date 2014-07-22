@@ -1,7 +1,8 @@
 var rgx = {
 	symbol: /^[\w_+-]+$/,
 	number: /^-?\d+$/,
-	whitespace: /[\s,]+/,
+	whitespace: /[\s,]+(?=(?:[^"\\]*(?:\\.|"(?:[^"\\]*\\.)*[^"\\]*"))*[^"]*$)/,
+	string: /^".*"$/,
 	block: /\((.+)\)/
 }
 
@@ -62,6 +63,8 @@ function read(tokens) {
 	} else {
 		if (rgx.number.test(t)) {
 			return parseInt(t)
+		} else if (rgx.string.test(t)) {
+			return t.substring(1, t.length - 1)
 		} else if (t == "true") {
 			return true
 		} else if (t == "false") {

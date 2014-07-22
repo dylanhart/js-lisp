@@ -1,0 +1,3 @@
+(print
+	"string 1"
+	"string 2")
