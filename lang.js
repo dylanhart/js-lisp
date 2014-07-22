@@ -148,8 +148,7 @@ function exec(tree, env) {
 			if (assigns.length % 2 != 0)
 				throw new Error("invalid assignment in let")
 
-			var scope = {}
-			scope.prototype = env
+			var scope = Object.create(env)
 			for (var i = 0; i < assigns.length; i+=2) {
 				var k = assigns[i]
 				var v = exec(assigns[i+1], env)
@@ -209,8 +208,7 @@ function exec(tree, env) {
 			if (proc.args.length != tree.length - 1)
 				throw new Error("invalid arg count")
 
-			var scope = {}
-			scope.prototype = env
+			var scope = Object.create(env)
 			proc.args.forEach(function(argname, n) {
 				scope[argname] = exec(tree[n+1], env)
 			})
@@ -226,8 +224,7 @@ function exec(tree, env) {
 var stdlib = {}
 
 function newGlobalScope() {
-	var gs = {}
-	gs.prototype = stdlib
+	var gs = Object.create(stdlib)
 	return gs
 }
 
