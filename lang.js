@@ -109,18 +109,28 @@ function exec(tree, env) {
 			return null
 		} else if (first.equals(symbols["+"])) {
 			var elems = tree.slice(1)
+			if (elems.length < 2)
+				throw new Error("invalid arg count")
 			elems = elems.map(function(e) {return exec(e, env)})
 			return elems.reduce(function(a, b) {return a + b})
 		} else if (first.equals(symbols["-"])) {
 			var elems = tree.slice(1)
+			if (elems.length == 0)
+				throw new Error("invalid arg count")
+			if (elems.length == 1)
+				return -exec(elems[0], env)
 			elems = elems.map(function(e) {return exec(e, env)})
 			return elems.reduce(function(a, b) {return a - b})
 		} else if (first.equals(symbols["*"])) {
 			var elems = tree.slice(1)
+			if (elems.length < 2)
+				throw new Error("invalid arg count")
 			elems = elems.map(function(e) {return exec(e, env)})
 			return elems.reduce(function(a, b) {return a * b})
 		} else if (first.equals(symbols["/"])) {
 			var elems = tree.slice(1)
+			if (elems.length < 2)
+				throw new Error("invalid arg count")
 			elems = elems.map(function(e) {return exec(e, env)})
 			return elems.reduce(function(a, b) {return a / b})
 		} else if (first.equals(symbols["fn"])) {
