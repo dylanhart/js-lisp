@@ -92,8 +92,21 @@ function exec(tree, env) {
 	if (Array.isArray(tree)) {
 		var first = tree[0]
 
-		if (!(first instanceof Symbol))
-			throw new Error("first element of block must be a symbol")
+		if (!(first instanceof Symbol)) {
+			if (Array.isArray(first)) {
+				var val = exec(first, env);
+
+				if (val instanceof Proc) {
+					var scope = Object.create(env)
+					val.args.forEach(function(argname, n) {
+						scope[argname] = exec(tree[n+1], env)
+					})
+
+					return exec(val.tree, scope)
+				}
+			}
+			throw new Error("first element of block must be a symbol or proc")
+		}
 
 		if (first.equals(symbols["do"])) {
 			var ret
