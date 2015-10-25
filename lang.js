@@ -5,7 +5,9 @@ var rgx = {
 	number: /^-?\d+$/,
 	whitespace: /[\s,]+(?=(?:[^"\\]*(?:\\.|"(?:[^"\\]*\\.)*[^"\\]*"))*[^"]*$)/,
 	string: /^".*"$/,
-	block: /\((.+)\)/
+	block: /\((.+)\)/,
+	allEol: /(;.*)?\n/g,
+	allParens: /([\(\)])/g
 }
 
 var keywords = [
@@ -82,8 +84,11 @@ function read(tokens) {
 
 function parse(src) {
 	src = "(do " + src + ")"
-	src = src.replace(/\n/, " ").replace(/([\(\)])/g, " $& ").replace(/\n/, " ")
-	var tokens = src.split(rgx.whitespace).filter(function(t) {return t != ''})
+	src = src
+			.replace(rgx.allEol, " ")
+			.replace(rgx.allParens, " $& ")
+	var tokens = src.split(rgx.whitespace)
+			.filter(function(t) {return t != ''})
 	var tree = read(tokens)	
 	return tree
 }
