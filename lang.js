@@ -30,6 +30,14 @@ var keywords = [
 	">"
 ]
 
+var escapes = {
+	"\\": "\\",
+	"\"": "\"",
+	"'": "'",
+	"n": "\n",
+	"t": "\t"
+}
+
 function read(tokens) {
 	if (tokens.length == 0)
 		throw new Error("EOF while reading")
@@ -50,7 +58,38 @@ function read(tokens) {
 		if (rgx.number.test(t)) {
 			return parseInt(t)
 		} else if (rgx.string.test(t)) {
-			return t.substring(1, t.length - 1)
+			var str = t.substring(1, t.length - 1);
+
+			// backslash substitutions
+			var pos = 0;
+			var parts = [];
+			for (var i = 0; i < str.length; i++) {
+				var c = str.charAt(i);
+				if (c === "\\") {
+					parts.push(str.substring(pos, i));
+
+					var c2 = str.charAt(i+1);
+					if (c2 == "x") {
+						var code = parseInt("0" + str.substring(i+1, i+4));
+						parts.push(String.fromCharCode(code));
+						pos = i + 4;
+						i += 3;
+					} else {
+						var sub = escapes[c2];
+						if (sub == undefined)
+							throw new Error("invalid escape sequence '\\" + c2
+									+ "'");
+						parts.push(sub);
+						pos = i + 2;
+						i++; // extra char consumed
+					}
+				}
+			}
+			if (pos != str.length) {
+				parts.push(str.substring(pos, str.length));
+			}
+
+			return parts.join("");
 		} else if (t == "true") {
 			return true
 		} else if (t == "false") {
