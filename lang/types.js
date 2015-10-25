@@ -17,8 +17,9 @@ exports.Symbol.prototype.equals = function(other) {
 
 // Proc
 
-exports.Proc = function(args, tree) {
+exports.Proc = function(args, tree, scope) {
 	this.args = args;
 	this.tree = tree;
+	this.scope = scope;
 }
 exports.Proc.prototype.type = "proc";

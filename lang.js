@@ -85,7 +85,7 @@ function exec(tree, env) {
 				var val = exec(first, env);
 
 				if (types.isType(val, types.Proc)) {
-					var scope = Object.create(env)
+					var scope = Object.create(val.scope)
 					val.args.forEach(function(argname, n) {
 						scope[argname] = exec(tree[n+1], env)
 					})
@@ -95,8 +95,6 @@ function exec(tree, env) {
 			}
 			throw new Error("first element of block must be a symbol or proc")
 		}
-
-		console.log("calling: " + first.name)
 
 		if (keywords.indexOf(first.name) != -1) {
 			return functions[first.name](exec, env, args);
@@ -109,7 +107,7 @@ function exec(tree, env) {
 			if (proc.args.length != args.length)
 				throw new Error("invalid arg count")
 
-			var scope = Object.create(env)
+			var scope = Object.create(proc.scope)
 			proc.args.forEach(function(argname, n) {
 				scope[argname] = exec(args[n], env);
 			})

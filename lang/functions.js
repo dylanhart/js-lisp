@@ -52,7 +52,7 @@ exports["fn"] = function(exec, scope, args) {
 	else
 		code = args[1];
 
-	return new types.Proc(argNames, code);
+	return new types.Proc(argNames, code, scope);
 };
 
 exports["let"] = function(exec, scope, args) {
