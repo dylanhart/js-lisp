@@ -82,15 +82,10 @@ function exec(tree, env) {
 
 		if (!types.isType(first, types.Symbol)) {
 			if (Array.isArray(first)) {
-				var val = exec(first, env);
+				var proc = exec(first, env);
 
-				if (types.isType(val, types.Proc)) {
-					var scope = Object.create(val.scope)
-					val.args.forEach(function(argname, n) {
-						scope[argname] = exec(tree[n+1], env)
-					})
-
-					return exec(val.tree, scope)
+				if (types.isType(proc, types.Proc)) {
+					return invoke(proc, args, env);
 				}
 			}
 			throw new Error("first element of block must be a symbol or proc")
@@ -107,12 +102,7 @@ function exec(tree, env) {
 			if (proc.args.length != args.length)
 				throw new Error("invalid arg count")
 
-			var scope = Object.create(proc.scope)
-			proc.args.forEach(function(argname, n) {
-				scope[argname] = exec(args[n], env);
-			})
-
-			return exec(proc.tree, scope)
+			return invoke(proc, args, env);
 		}
 	} else if (types.isType(tree, types.Symbol)) {
 		var ret = env[tree.name]
@@ -122,6 +112,16 @@ function exec(tree, env) {
 	} else {
 		return tree
 	}
+}
+
+function invoke(f, args, scope) {
+	// eval args using current scope and place them into the function's scope
+	var newScope = Object.create(f.scope);
+	f.args.forEach(function(argname, n) {
+		newScope[argname] = exec(args[n], scope);
+	});
+
+	return exec(f.tree, newScope);
 }
 
 var stdlib = {}
